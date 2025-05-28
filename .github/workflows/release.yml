@@ -5,6 +5,10 @@ on:
     tags:
       - '*'  # Triggers the workflow on version tags
 
+permissions:
+  contents: write
+  actions: read
+
 env:
   GEOS_VERSION: "3.13.1"
 
@@ -121,7 +125,7 @@ jobs:
           path: dist
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.2.2
         with:
           files: dist/*
           body: |
