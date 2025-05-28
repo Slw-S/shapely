@@ -59,9 +59,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_ALL: |
-             echo "[global]
-             pre = true" > ~/.config/pip/pip.conf
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_ENVIRONMENT_MACOS:
             GEOS_INSTALL=${{ runner.temp }}/geos-${{ env.GEOS_VERSION }}
@@ -82,11 +79,11 @@ jobs:
           CIBW_BEFORE_BUILD: |
             # For free threading support in Cython install a pre-release version of Cython
             python -c "import sysconfig, subprocess; subprocess.check_call(['pip', 'install', '--pre', 'cython'] if sysconfig.get_config_var('Py_GIL_DISABLED') else ['pip', 'install', 'cython'])" &&
-            pip install numpy==2.3.0rc1 setuptools wheel
+            pip install numpy setuptools wheel
           CIBW_BEFORE_BUILD_WINDOWS:
             # For free threading support in Cython install a pre-release version of Cython
             python -c "import sysconfig, subprocess; subprocess.check_call(['pip', 'install', '--pre', 'cython'] if sysconfig.get_config_var('Py_GIL_DISABLED') else ['pip', 'install', 'cython'])" &&
-            pip install numpy==2.3.0rc1 setuptools wheel &&
+            pip install numpy setuptools wheel &&
             pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair --add-path ${{ runner.temp }}\geos-${{ env.GEOS_VERSION }}\bin -w {dest_dir} {wheel}
 
