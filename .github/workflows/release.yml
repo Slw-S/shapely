@@ -1,8 +1,9 @@
 name: Build and publish
 
 on:
-
-  workflow_dispatch:
+  push:
+    tags:
+      - '*'  # Triggers the workflow on version tags
 
 env:
   GEOS_VERSION: "3.13.1"
@@ -95,3 +96,35 @@ jobs:
           retention-days: 5
           compression-level: 0
 
+  publish:
+    name: Publish on GitHub
+    needs: [build_wheels_mac_win]
+    runs-on: ubuntu-latest
+    steps:
+     
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-macos-14-arm64
+          path: dist
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-windows-11-arm-ARM64 
+          path: dist
+          
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-windows-2019-AMD64
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body: |
+            Unofficial devel wheels for testing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
