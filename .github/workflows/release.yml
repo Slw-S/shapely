@@ -220,7 +220,7 @@ jobs:
 
   publish:
     name: Publish on GitHub
-    needs: [build_wheels_mac_win, build_wheels_linux]
+    needs: [build_sdist, build_wheels_mac_win, build_wheels_linux]
     runs-on: ubuntu-latest
     steps:
      
@@ -241,3 +241,4 @@ jobs:
             Unofficial release for testing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
