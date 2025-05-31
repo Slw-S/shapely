@@ -208,6 +208,7 @@ jobs:
             python -c "import sysconfig, subprocess; subprocess.check_call(['pip', 'install', '--pre', 'cython'] if sysconfig.get_config_var('Py_GIL_DISABLED') else ['pip', 'install', 'cython'])" &&
             pip install numpy setuptools wheel &&
             pip install delvewheel
+          CIBW_SKIP: ${{ runner.os == 'Windows' && runner.arch == 'ARM64' && '*cp310*' || '' }}
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair --add-path ${{ runner.temp }}\geos-${{ env.GEOS_VERSION }}\bin -w {dest_dir} {wheel}
 
       - name: Upload artifacts
